@@ -1,0 +1,373 @@
+/*
+log.txt
+Project 6
+Samuel lamb
+cop3330
+4/1/2019
+*/
+
+
+Project started 4/1/2019
+
+Questions:
+1. State what changes you made to transform the InsertionSort code from the specific code in project 1 to a function template. And for each change, explain why it was made.
+
+  A = The change was using a template which allowed for generalizing the type
+  The reasoning is displayed within the code itself
+
+2. A file of integers can be sorted as type int or type std::string. Explain why the results sometimes differ.
+
+  A = There can be an algebraic/mathematical answer to a comparison but a string comparison of the same 2 inputs could differ
+  an example is how the number 13 is less than 100 mathematically but you compare the strings and 100 is less than 13
+  
+3. Explain why the sort template works for type std::string. (Hint: what operators are available for std::string?)
+
+  A = with the std::string, "<" is a built in operator, hence the sort template working fine within the type std::string
+  
+4. Explain why the sort template does not work (without some code enhancements) for C-strings.
+
+  A = the c-string library (to my knowledge) does not have the comparison opperator overloads that std::string does
+  
+5. Considering the way we were able to apply generic InsertionSort to type Product, describe what would be required to make the sort template actually work for C-strings. (You don't need details, just a few sentences that draw on the experience with Product.)
+
+  A = We would need to be able to use our c string difference functions and create our own version of the "<"
+  operator. If we could utilize those functions within std::string in the same way that "<" works
+  the sort template could be used for c-strings.
+  
+
+
+Day 1 - 
+I got a late start on this assignment due to finishing up project 5 late.
+The first step I took wasa to cope everything over from the LIB and make the following files:
+
+cstringdiff.cpp
+cstringdiff.h
+tsort.h
+product.h
+product.cpp
+log.txt
+
+Bringing in the product and cstringdiff files from their respective projects.
+
+
+
+Day 2 -
+
+Today I started making the templates for tsort.h and wrote some commented pseudocode to help me when coming back to work further
+I looked up insertionsort and found a general template using the swap function
+
+template <typename T>
+void Display (const T* beg, const T* end, char ofc = '\0')
+{
+  while (beg != end)
+  {
+    //output
+    //if ofc isnt null print it
+    //increment begin
+  }
+}
+
+template <typename T>
+void InsertionSort (T* beg, T* end)
+{
+  //start at index 1
+  T
+  //run i to length
+  while(i < end)
+  {
+    while()
+    {
+
+    }
+  }
+}
+
+
+Added in the code given for Product.h
+
+std::istream& operator>> (std::istream& is, Product& p);
+bool          operator<  (const Product& p1, const Product& p2);
+
+Day 3 -
+I decided to restructure a lot of my product.cpp and cstringdiff
+I did not fully understand them at the time of making them (grade wasn't amazing) and can do a lot better
+
+My previous code for LexDiff was
+
+int LexDiff (const char* s1, const char* s2) 
+{
+  size_t i=0;
+  for(;s1[i]!='\0' && s2[i]!='\0';++i) 
+  {
+      if(s1[i] != s2[i])
+      {
+        return(s1[i]-s2[i]);
+      }
+  }
+  return(s1[i] - s1[i]);
+}
+
+While this can work I decided to make it easier to understand and smoother using a while loop
+
+I stored the *s1 and *s2 into characters names First and Second 
+Then while both of those values are not 0 the difference will be calculated and the index incremented
+
+While with dictionary differencwe you have to use more of a logic solution,
+with lex diff you can use a straightforward arithmaticic approach 
+
+int LexDiff (const char* s1, const char* s2) 
+{
+  size_t i=0;
+  char First = *s1;
+  char Second = *s2;
+  while (First != '\0' && Second != '0/')
+  {
+    int Diff = (First - Second);
+    if (Diff != 0)
+    {
+      return Diff;
+      ++i;
+    }
+    First = * (s1 + i);
+    Second = * (s2 + i);
+  }
+  return (First - Second);
+}
+
+After working on this I changed up my dictionary diff
+
+It was previously:
+
+int DictionaryDiff (const char* s1, const char* s2)
+{
+  size_t i=0;
+  for(;s1[i]!='\0' && s2[i]!='\0';++i)
+  {
+    if(tolower(s1[i])<tolower(s2[i]))
+    {
+      return(-1);
+    }  
+    else if(tolower(s1[i]>tolower(s2[i])))
+    {
+      return(1);
+    } 
+  }
+  if(s1[i]!='\0'&&s2[i]=='\0')
+  {
+    return(1);
+  }
+  else if(s1[i]=='\0'&&s2[i]!='\0')
+  {
+    return(-1);
+  }
+  else
+  {
+  return 0;
+  }
+}
+
+I remade this also using a while loop instead of the for loop, also using the First
+and Second characters I made for LexDiff
+I used tolower to convert the characters to their lowercase, making them able to be sorted by dictionary orientation
+
+Here is the remade code:
+
+int DictionaryDiff (const char* s1, const char* s2)
+{
+  size_t i=0;
+  char First = *s1;
+  char Second = *s2;
+  while (First != '\0' && Second != '0/')
+  {
+    int Diff = (tolower(First) - tolower(Second));
+    if (Diff != 0)
+    {
+      if (Diff < 0) return -1;
+      if (Diff > 0) return 1;
+    }
+    ++i;
+    First = * (s1 + i);
+    Second = * (s2 + i);
+  }
+  return 0;
+}
+
+A few of the first compiling errors consisted of mining semi-colons in a few places
+also including the <cstint> library (which doesn't exist) instead of the <cstdint> library
+
+Spelling errors were my worst enemy.
+
+After some debugging I realized my naming of BarCode would cause come problems
+within
+std::istream& operator >> (std::istream& is, Product& p)
+area, the BarCode is named code.
+So I went through and changed some of my BarCode variables to code because it made things simpler
+
+I was getting a segmentation fault for productsort and so I started reviewing through the files to see where it coudl have been caused
+
+
+I added #include <string> to product.h because I had forgotten to include it and had instead just added in the cstring library
+
+Made the data files and ran them with the executables
+
+lamb@linprog2.cs.fsu.edu:~/cop3330i/proj6> intsort.x < data.9
+ A as entered: 250 16 28 562 10 15 28 400 122
+ A after sort: 10 15 16 28 28 122 250 400 562
+
+lamb@linprog2.cs.fsu.edu:~/cop3330i/proj6> stringsort.x < data.9
+ A as entered: 250 16 28 562 10 15 28 400 122
+ A after sort: 10 122 15 16 250 28 28 400 562
+
+lamb@linprog2.cs.fsu.edu:~/cop3330i/proj6> charsort.x < data.9
+ A as entered: 2501628562101528400122
+ A after sort: 0000111122222245556688
+
+lamb@linprog2.cs.fsu.edu:~/cop3330i/proj6> stringsort.x < data.product
+ A as entered: widget_B ABCDEF01 131.00 gadget_1 ABCDEF02 109.99 widget_A ABCDEF03 129.95 gadget_2 12345604 109.00 widget_A 00123405 109.95 widget_b 12344506 109.95 gadget_1 23456707 99.99
+ A after sort: 00123405 109.00 109.95 109.95 109.99 12344506 12345604 129.95 131.00 23456707 99.99 ABCDEF01 ABCDEF02 ABCDEF03 gadget_1 gadget_1 gadget_2 widget_A widget_A widget_B widget_b
+
+lamb@linprog2.cs.fsu.edu:~/cop3330i/proj6> charsort.x < data.product
+ A as entered: widget_BABCDEF01131.00gadget_1ABCDEF02109.99widget_AABCDEF03129.95gadget_212345604109.00widget_A00123405109.95widget_b12344506109.95gadget_12345670799.99
+ A after sort: .......000000000000000001111111111111222222233333344444455555556667799999999999999AAAAABBBBCCCDDDEEEFFF_______aaabdddddddeeeeeeeggggggggggiiiitttttttwwww
+
+ After some debugging my product is giving out a very odd output right now.
+
+ here is the result of productsort < data.9
+
+ lamb@linprog2.cs.fsu.edu:~/cop3330i/proj6> productsort.x < data.9
+*** Error in `productsort.x': double free or corruption (out): 0x00007ffcceb62840 ***
+======= Backtrace: =========
+/lib64/libc.so.6(+0x81489)[0x7f28eb9b8489]
+productsort.x[0x400fb3]
+productsort.x[0x400ea3]
+productsort.x[0x4015c2]
+/lib64/libc.so.6(__libc_start_main+0xf5)[0x7f28eb9593d5]
+productsort.x[0x400da9]
+======= Memory map: ========
+00400000-00403000 r-xp 00000000 00:27 8741108                            /home/majors/lamb/cop3330i/proj6/productsort.x
+00602000-00603000 r--p 00002000 00:27 8741108                            /home/majors/lamb/cop3330i/proj6/productsort.x
+00603000-00604000 rw-p 00003000 00:27 8741108                            /home/majors/lamb/cop3330i/proj6/productsort.x
+009a8000-009c9000 rw-p 00000000 00:00 0                                  [heap]
+7f28e4000000-7f28e4021000 rw-p 00000000 00:00 0
+7f28e4021000-7f28e8000000 ---p 00000000 00:00 0
+7f28eb937000-7f28ebaf9000 r-xp 00000000 08:05 1708175                    /usr/lib64/libc-2.17.so
+7f28ebaf9000-7f28ebcf9000 ---p 001c2000 08:05 1708175                    /usr/lib64/libc-2.17.so
+7f28ebcf9000-7f28ebcfd000 r--p 001c2000 08:05 1708175                    /usr/lib64/libc-2.17.so
+7f28ebcfd000-7f28ebcff000 rw-p 001c6000 08:05 1708175                    /usr/lib64/libc-2.17.so
+7f28ebcff000-7f28ebd04000 rw-p 00000000 00:00 0
+7f28ebd04000-7f28ebd19000 r-xp 00000000 08:05 1726462                    /usr/lib64/libgcc_s-4.8.5-20150702.so.1
+7f28ebd19000-7f28ebf18000 ---p 00015000 08:05 1726462                    /usr/lib64/libgcc_s-4.8.5-20150702.so.1
+7f28ebf18000-7f28ebf19000 r--p 00014000 08:05 1726462                    /usr/lib64/libgcc_s-4.8.5-20150702.so.1
+7f28ebf19000-7f28ebf1a000 rw-p 00015000 08:05 1726462                    /usr/lib64/libgcc_s-4.8.5-20150702.so.1
+7f28ebf1a000-7f28ec01b000 r-xp 00000000 08:05 1727508                    /usr/lib64/libm-2.17.so
+7f28ec01b000-7f28ec21a000 ---p 00101000 08:05 1727508                    /usr/lib64/libm-2.17.so
+7f28ec21a000-7f28ec21b000 r--p 00100000 08:05 1727508                    /usr/lib64/libm-2.17.so
+7f28ec21b000-7f28ec21c000 rw-p 00101000 08:05 1727508                    /usr/lib64/libm-2.17.so
+7f28ec21c000-7f28ec305000 r-xp 00000000 08:05 1708225                    /usr/lib64/libstdc++.so.6.0.19
+7f28ec305000-7f28ec504000 ---p 000e9000 08:05 1708225                    /usr/lib64/libstdc++.so.6.0.19
+7f28ec504000-7f28ec50c000 r--p 000e8000 08:05 1708225                    /usr/lib64/libstdc++.so.6.0.19
+7f28ec50c000-7f28ec50e000 rw-p 000f0000 08:05 1708225                    /usr/lib64/libstdc++.so.6.0.19
+7f28ec50e000-7f28ec523000 rw-p 00000000 00:00 0
+7f28ec523000-7f28ec545000 r-xp 00000000 08:05 1708166                    /usr/lib64/ld-2.17.so
+7f28ec70e000-7f28ec713000 rw-p 00000000 00:00 0
+7f28ec742000-7f28ec744000 rw-p 00000000 00:00 0
+7f28ec744000-7f28ec745000 r--p 00021000 08:05 1708166                    /usr/lib64/ld-2.17.so
+7f28ec745000-7f28ec746000 rw-p 00022000 08:05 1708166                    /usr/lib64/ld-2.17.so
+7f28ec746000-7f28ec747000 rw-p 00000000 00:00 0
+7ffcceb46000-7ffcceb67000 rw-p 00000000 00:00 0                          [stack]
+7ffccebc7000-7ffccebc9000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+Abort
+
+I am not quite sure the cause but will look more into it tomorrow.
+
+
+Day 4 -
+
+ProductSort needs to be fixed
+
+I reconfigured my product.cpp so that it follows the order of the .h
+
+I found out that I had placed some deconstructor code within
+void Product::SetName(const char * name)
+for some reason and that was causing the seen above errors
+
+now running productsort.x < data.9 yields:
+
+lamb@linprog2.cs.fsu.edu:~/cop3330i/proj6> productsort.x < data.9
+ A as entered: 
+250      00000016        28.00
+562     00000010        15.00
+28      00000400        122.00
+
+ A after sort: 
+250      00000016        28.00
+28      00000400        122.00
+562     00000010        15.00
+
+Which is the expected output
+
+however
+
+productsort.x < data.product yields:
+
+lamb@linprog2.cs.fsu.edu:~/cop3330i/proj6> productsort.x < data.product
+ A as entered: 
+widget_B ABCDEF01        131.00
+gadget_1        ABCDEF02        109.99
+widget_A        ABCDEF03        129.95
+gadget_2        12345604        109.00
+widget_A        00123405        109.95
+widget_b        12344506        109.95
+gadget_1        23456707        99.99
+
+ A after sort:  
+        23456707        99.99
+#       12345604        109.00
+#       00123405        109.95
+#       12344506        109.95
+#       ABCDEF02        109.99
+#       ABCDEF03        129.95
+widget_B        ABCDEF01        131.00
+
+Which is incorrect 
+
+
+I tried getting rid of my destructor and that make the code work
+I am honestly not sure why that worked, but it did.
+
+The new output for productsort.x < data.product is:
+
+
+lamb@linprog2.cs.fsu.edu:~/cop3330i/proj6> productsort.x < data.product
+ A as entered: 
+widget_B        ABCDEF01        131.00
+gadget_1        ABCDEF02        109.99
+widget_A        ABCDEF03        129.95
+gadget_2        12345604        109.00
+widget_A        00123405        109.95
+widget_b        12344506        109.95
+gadget_1        23456707        99.99
+
+ A after sort: 
+gadget_1        23456707        99.99
+gadget_1        ABCDEF02        109.99
+gadget_2        12345604        109.00
+widget_A        00123405        109.95
+widget_A        ABCDEF03        129.95
+widget_b        12344506        109.95
+widget_B        ABCDEF01        131.00
+
+This is correct
+
+
+
+RoboCheck said I had a few formatting errors however the format that my results show up as are in the same format that the given executables run.
+
+I edited the given file to add a newline in to help with the issue and it was fixed
+
+submission 3:
+
+I added a space and then added newlines to the other sort files so the formatting is the same as the expected within RoboCheck
+This didn't quite work and so since the sorting works correctly I will not edit it further
+
